@@ -27,14 +27,14 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || "Request failed");
+        throw new Error(data.detail || "Something went wrong");
       }
 
       setAnswer(data.answer || data.response || "No answer returned.");
     } catch (error) {
       console.error(error);
       setAnswer(
-        "Could not connect to SupportPilot AI. Make sure the backend is running."
+        "Unable to connect to SupportPilot AI. Make sure the backend is running."
       );
     } finally {
       setLoading(false);
@@ -55,22 +55,22 @@ export default function Home() {
             Intelligent support assistant
           </p>
 
-          <div className="mt-10 space-y-3">
-            <div className="rounded-lg bg-blue-600 px-4 py-3">
+          <nav className="mt-10 space-y-3">
+            <button className="w-full rounded-lg bg-blue-600 px-4 py-3 text-left">
               💬 AI Chat
-            </div>
+            </button>
 
-            <div className="rounded-lg px-4 py-3 text-slate-300 hover:bg-slate-800">
+            <button className="w-full rounded-lg px-4 py-3 text-left text-slate-300 hover:bg-slate-800">
               📄 Documents
-            </div>
+            </button>
 
-            <div className="rounded-lg px-4 py-3 text-slate-300 hover:bg-slate-800">
+            <button className="w-full rounded-lg px-4 py-3 text-left text-slate-300 hover:bg-slate-800">
               🏢 Businesses
-            </div>
-          </div>
+            </button>
+          </nav>
         </aside>
 
-        {/* Main content */}
+        {/* Main */}
         <section className="flex flex-1 flex-col">
 
           {/* Header */}
@@ -86,13 +86,14 @@ export default function Home() {
             </div>
 
             <div className="flex items-center gap-2 text-sm text-green-400">
-              <span className="h-2 w-2 rounded-full bg-green-400" />
+              <span className="h-2 w-2 rounded-full bg-green-400"></span>
               Online
             </div>
           </header>
 
-          {/* Chat */}
-          <div className="flex flex-1 justify-center px-6 py-12">
+          {/* Chat area */}
+          <div className="flex flex-1 flex-col items-center px-6 py-12">
+
             <div className="w-full max-w-4xl">
 
               <div className="mb-10 text-center">
@@ -112,7 +113,7 @@ export default function Home() {
               {/* Answer */}
               {answer && (
                 <div className="mb-6 rounded-2xl border border-slate-800 bg-slate-900 p-6">
-                  <div className="mb-3 font-semibold text-blue-400">
+                  <div className="mb-3 text-sm font-semibold text-blue-400">
                     SupportPilot AI
                   </div>
 
@@ -122,9 +123,8 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Question box */}
+              {/* Input */}
               <div className="rounded-2xl border border-slate-700 bg-slate-900 p-3 shadow-xl">
-
                 <textarea
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
@@ -146,7 +146,7 @@ export default function Home() {
                   <button
                     onClick={askAI}
                     disabled={loading || !question.trim()}
-                    className="rounded-xl bg-blue-600 px-6 py-3 font-semibold hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-xl bg-blue-600 px-6 py-3 font-semibold transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {loading ? "Thinking..." : "Ask AI →"}
                   </button>
@@ -155,7 +155,6 @@ export default function Home() {
 
               {/* Suggestions */}
               <div className="mt-6 grid gap-3 md:grid-cols-3">
-
                 <button
                   onClick={() =>
                     setQuestion("Summarize the uploaded document")
@@ -163,9 +162,7 @@ export default function Home() {
                   className="rounded-xl border border-slate-800 bg-slate-900 p-4 text-left hover:border-blue-500"
                 >
                   <div className="mb-2">📄</div>
-                  <div className="font-medium">
-                    Summarize document
-                  </div>
+                  <div className="font-medium">Summarize document</div>
                 </button>
 
                 <button
@@ -175,9 +172,7 @@ export default function Home() {
                   className="rounded-xl border border-slate-800 bg-slate-900 p-4 text-left hover:border-blue-500"
                 >
                   <div className="mb-2">🔍</div>
-                  <div className="font-medium">
-                    Key points
-                  </div>
+                  <div className="font-medium">Key points</div>
                 </button>
 
                 <button
@@ -187,11 +182,8 @@ export default function Home() {
                   className="rounded-xl border border-slate-800 bg-slate-900 p-4 text-left hover:border-blue-500"
                 >
                   <div className="mb-2">💡</div>
-                  <div className="font-medium">
-                    Ask about document
-                  </div>
+                  <div className="font-medium">Ask about document</div>
                 </button>
-
               </div>
 
             </div>
