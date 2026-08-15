@@ -3,18 +3,28 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from ai.vector_store import search_similar
 
 
-def answer_question(question: str):
+def answer_question(question: str, business_id: int):
     """
-    Answer a user question using relevant document context.
+    Answer a user question using only documents
+    belonging to the selected business.
     """
 
-    results = search_similar(question)
+    results = search_similar(
+        question,
+        business_id=business_id,
+        k=4,
+    )
 
     if not results:
-        context = "No relevant information was found in the uploaded documents."
+        context = (
+            "No relevant information was found "
+            "in this business's uploaded documents."
+        )
     else:
         context = "\n\n".join(
-            result["text"] if isinstance(result, dict) else str(result)
+            result.page_content
+            if hasattr(result, "page_content")
+            else str(result)
             for result in results
         )
 
@@ -23,9 +33,12 @@ You are SupportPilot AI, an intelligent customer support assistant.
 
 Answer the user's question clearly and professionally.
 
-Use ONLY the provided document context when answering.
-If the answer cannot be found in the context, say that the information
-is not available in the uploaded documents.
+IMPORTANT RULES:
+- Use ONLY the provided document context.
+- The context belongs ONLY to the selected business.
+- Do not use information from other businesses.
+- If the answer cannot be found in the context, say:
+  "The information is not available in this business's uploaded documents."
 
 Document context:
 {context}

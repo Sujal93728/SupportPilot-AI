@@ -23,12 +23,24 @@ def get_current_user(
             algorithms=[settings.ALGORITHM],
         )
 
+        print("JWT PAYLOAD:", payload)
+        print("JWT ALGORITHM:", settings.ALGORITHM)
+        print("SECRET KEY LENGTH:", len(settings.SECRET_KEY))
+
         user_id = int(payload["sub"])
 
-    except JWTError:
+    except JWTError as e:
+        print("JWT ERROR:", repr(e))
         raise HTTPException(
             status_code=401,
-            detail="Invalid token",
+            detail=f"Invalid token: {str(e)}",
+        )
+
+    except (KeyError, ValueError, TypeError) as e:
+        print("JWT PAYLOAD ERROR:", repr(e))
+        raise HTTPException(
+            status_code=401,
+            detail=f"Invalid token payload: {str(e)}",
         )
 
     user = db.query(User).filter(User.id == user_id).first()
